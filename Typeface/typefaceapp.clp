@@ -127,6 +127,30 @@
                      (response Yes)
                      (valid-answers Yes No))))
 
+(defrule determine-info-tables ""
+   (logical (info-condesed-ans No))
+   =>
+   (assert (UI-state (display info-tables)
+                     (relation-asserted info-tables-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-info-terminator ""
+   (logical (info-tables-ans No))
+   =>
+   (assert (UI-state (display info-terminator)
+                     (relation-asserted info-terminator-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-info-flowchart ""
+   (logical (info-terminator-ans No))
+   =>
+   (assert (UI-state (display info-flowchart)
+                     (relation-asserted info-flowchart-ans)
+                     (response Yes)
+                     (valid-answers Yes))))
+
 ;;; NEWS
 (defrule determine-news-type ""
    (logical (project-type news))
@@ -135,6 +159,102 @@
                      (relation-asserted news-type-ans)
                      (response text-face)
                      (valid-answers text-face combination display))))
+
+(defrule determine-news-boring ""
+   (logical (news-type-ans text-face))
+   =>
+   (assert (UI-state (display news-boring)
+                     (relation-asserted news-boring-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-news-used ""
+   (logical (news-boring-ans No))
+   =>
+   (assert (UI-state (display news-used)
+                     (relation-asserted news-used-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-news-award ""
+   (logical (news-used-ans No))
+   =>
+   (assert (UI-state (display news-award)
+                     (relation-asserted news-award-ans)
+                     (response good)
+                     (valid-answers good bad))))
+
+(defrule determine-news-spiekermann ""
+   (logical (news-type-ans combination))
+   =>
+   (assert (UI-state (display news-spiekermann)
+                     (relation-asserted news-spiekermann-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-news-netherlands ""
+   (logical (news-spiekermann-ans No))
+   =>
+   (assert (UI-state (display news-netherlands)
+                     (relation-asserted news-netherlands-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-news-serif ""
+   (logical (news-netherlands-ans Yes))
+   =>
+   (assert (UI-state (display news-serif)
+                     (relation-asserted news-serif-ans)
+                     (response ok)
+                     (valid-answers ok))))
+
+(defrule determine-news-flowchart ""
+   (logical (news-netherlands-ans No))
+   =>
+   (assert (UI-state (display news-flowchart)
+                     (relation-asserted news-flowchart-ans)
+                     (response ok)
+                     (valid-answers ok))))
+
+(defrule determine-news-traditional ""
+   (logical (news-type-ans display))
+   =>
+   (assert (UI-state (display news-traditional)
+                     (relation-asserted news-traditional-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-news-swiss ""
+   (logical (news-traditional-ans Yes))
+   =>
+   (assert (UI-state (display news-swiss)
+                     (relation-asserted news-swiss-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-news-age ""
+   (logical (news-swiss-ans No))
+   =>
+   (assert (UI-state (display news-age)
+                     (relation-asserted news-age-ans)
+                     (response new)
+                     (valid-answers new old))))
+
+(defrule determine-news-modern ""
+   (logical (news-traditional-ans No))
+   =>
+   (assert (UI-state (display news-modern)
+                     (relation-asserted news-modern-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+
+(defrule determine-news-nineties ""
+   (logical (news-modern-ans No))
+   =>
+   (assert (UI-state (display news-nineties)
+                     (relation-asserted news-nineties-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
 
 ;;; LOGO
 (defrule determine-logo-serif ""
@@ -163,7 +283,9 @@
    => (assert (UI-state (display akzidenz-grotesk) (state final))))
 
 (defrule arnhem-conclusions ""
-   (logical (XXX XXX))
+   (or
+      (logical (news-award-ans bad))
+      (logical (news-spiekermann-ans Yes)))
    => (assert (UI-state (display arnhem) (state final))))
 
 (defrule baskerville-conclusions ""
@@ -195,7 +317,7 @@
    => (assert (UI-state (display fedra) (state final))))
 
 (defrule ff-din-conclusions ""
-   (logical (XXX XXX))
+   (logical (info-flowchart-ans Yes))
    => (assert (UI-state (display ff-din) (state final))))
 
 (defrule ff-enkrighthand-conclusions ""
@@ -203,7 +325,7 @@
    => (assert (UI-state (display ff-enkrighthand) (state final))))
 
 (defrule ff-meta-conclusions ""
-   (logical (XXX XXX))
+   (logical (news-nineties-ans No))
    => (assert (UI-state (display ff-meta) (state final))))
 
 (defrule ff-scala-conclusions ""
@@ -211,7 +333,7 @@
    => (assert (UI-state (display ff-scala) (state final))))
 
 (defrule franklin-gothic-conclusions ""
-   (logical (XXX XXX))
+   (logical (news-age-ans old))
    => (assert (UI-state (display franklin-gothic) (state final))))
 
 (defrule frutiger-conclusions ""
@@ -227,15 +349,17 @@
    => (assert (UI-state (display garamond) (state final))))
 
 (defrule gotham-conclusions ""
-   (logical (XXX XXX))
+   (logical (news-modern-ans Yes))
    => (assert (UI-state (display gotham) (state final))))
 
 (defrule helvetica-conclusions ""
-   (logical (XXX XXX))
+   (or
+      (logical (news-swiss-ans Yes))
+      (logical (news-nineties-ans Yes)))
    => (assert (UI-state (display helvetica) (state final))))
 
 (defrule interstate-conclusions ""
-   (logical (XXX XXX))
+   (logical (news-age-ans new))
    => (assert (UI-state (display interstate) (state final))))
 
 (defrule joanna-conclusions ""
@@ -243,7 +367,7 @@
    => (assert (UI-state (display joanna) (state final))))
 
 (defrule letter-gothic-conclusions ""
-   (logical (XXX XXX))
+   (logical (info-tables-ans Yes))
    => (assert (UI-state (display letter-gothic) (state final))))
 
 (defrule lexicon-conclusions ""
@@ -255,7 +379,7 @@
    => (assert (UI-state (display metro) (state final))))
 
 (defrule miller-conclusions ""
-   (logical (XXX XXX))
+   (logical (news-used-ans Yes))
    => (assert (UI-state (display miller) (state final))))
 
 (defrule minion-conclusions ""
@@ -267,7 +391,7 @@
    => (assert (UI-state (display myriad) (state final))))
 
 (defrule ocr-conclusions ""
-   (logical (XXX XXX))
+   (logical (info-terminator-ans Yes))
    => (assert (UI-state (display ocr) (state final))))
 
 (defrule optima-conclusions ""
@@ -283,7 +407,7 @@
    => (assert (UI-state (display peignot) (state final))))
 
 (defrule proforma-conclusions ""
-   (logical (XXX XXX))
+   (logical (news-award-ans good))
    => (assert (UI-state (display proforma) (state final))))
 
 (defrule rotis-conclusions ""
@@ -295,7 +419,7 @@
    => (assert (UI-state (display sabon) (state final))))
 
 (defrule swift-conclusions ""
-   (logical (XXX XXX))
+   (logical (news-serif-ans ok))
    => (assert (UI-state (display swift) (state final))))
 
 (defrule syntax-conclusions ""
@@ -303,11 +427,11 @@
    => (assert (UI-state (display syntax) (state final))))
 
 (defrule times-conclusions ""
-   (logical (XXX XXX))
+   (logical (news-boring-ans Yes))
    => (assert (UI-state (display times) (state final))))
 
 (defrule univers-conclusions ""
-   (logical (XXX XXX))
+   (logical (info-condesed-ans Yes))
    => (assert (UI-state (display univers) (state final))))
 
 (defrule walbaum-conclusions ""
