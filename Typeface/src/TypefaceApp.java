@@ -42,7 +42,7 @@ or makeInstance call, retain it and then release it after the call is made.
 
 */
 
-class TypefaceApp implements ActionListener {
+public class TypefaceApp implements ActionListener {
 	JLabel displayLabel;
 	JButton nextButton;
 	JButton prevButton;
