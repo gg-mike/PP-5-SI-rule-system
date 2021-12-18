@@ -264,6 +264,110 @@
                      (relation-asserted logo-serif-ans)
                      (response sans-serif)
                      (valid-answers sans-serif serif))))
+                     
+(defrule determine-logo-words-sound ""
+   (logical (logo-serif-ans serif))
+   =>
+   (assert (UI-state (display logo-words-sound)
+                     (relation-asserted logo-words-sound-ans)
+                     (response good)
+                     (valid-answers good bad)))) 
+                     
+(defrule determine-logo-something-new ""
+   (logical (logo-words-sound-ans bad))
+   =>
+   (assert (UI-state (display logo-something-new)
+                     (relation-asserted logo-something-new-ans)
+                     (response good)
+                     (valid-answers good bad)))) 
+                     
+(defrule determine-logo-restaurant ""
+   (logical (logo-something-new-ans bad))
+   =>
+   (assert (UI-state (display logo-restaurant)
+                     (relation-asserted logo-restaurant-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+         
+(defrule determine-logo-office ""
+   (logical (logo-restaurant-ans No))
+   =>
+   (assert (UI-state (display logo-office)
+                     (relation-asserted logo-office-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))
+                     
+(defrule determine-logo-waiting ""
+   (logical (logo-office-ans No))
+   =>
+   (assert (UI-state (display logo-waiting)
+                     (relation-asserted logo-waiting-ans)
+                     (response ok)
+                     (valid-answers ok)))) 
+                      
+(defrule determine-logo-geometrics ""
+   (logical (logo-serif-ans sans-serif))
+   =>
+   (assert (UI-state (display logo-geometrics)
+                     (relation-asserted logo-geometrics-ans)
+                     (response Yes)
+                     (valid-answers Yes No)))) 
+
+(defrule determine-logo-futura ""
+   (logical (logo-geometrics-ans Yes))
+   =>
+   (assert (UI-state (display logo-futura)
+                     (relation-asserted logo-futura-ans)
+                     (response Yes)
+                     (valid-answers Yes No)))) 
+                     
+(defrule determine-logo-neo-grotesk ""
+   (logical (logo-geometrics-ans No))
+   =>
+   (assert (UI-state (display logo-neo-grotesk)
+                     (relation-asserted logo-neo-grotesk-ans)
+                     (response Yes)
+                     (valid-answers Yes No)))) 
+                     
+(defrule determine-logo-science-fiction ""
+   (logical (logo-neo-grotesk-ans Yes))
+   =>
+   (assert (UI-state (display logo-science-fiction)
+                     (relation-asserted logo-science-fiction-ans)
+                     (response good)
+                     (valid-answers good bad))))             
+
+(defrule determine-logo-humanistic ""
+   (logical (logo-neo-grotesk-ans No))
+   =>
+   (assert (UI-state (display logo-humanistic)
+                     (relation-asserted logo-humanistic-ans)
+                     (response Yes)
+                     (valid-answers Yes No)))) 
+
+(defrule determine-logo-adobe ""
+   (logical (logo-humanistic-ans Yes))
+   =>
+   (assert (UI-state (display logo-adobe)
+                     (relation-asserted logo-adobe-ans)
+                     (response Yes)
+                     (valid-answers Yes No)))) 
+
+(defrule determine-logo-classic ""
+   (logical (logo-humanistic-ans No))
+   =>
+   (assert (UI-state (display logo-classic)
+                     (relation-asserted logo-classic-ans)
+                     (response Yes)
+                     (valid-answers Yes No)))) 
+
+(defrule determine-logo-decorative ""
+   (logical (logo-classic-ans No))
+   =>
+   (assert (UI-state (display logo-decorative)
+                     (relation-asserted logo-decorative-ans)
+                     (response ok)
+                     (valid-answers ok)))) 
 
 ;;; INVI
 (defrule determine-invi-handwritten ""
@@ -273,13 +377,69 @@
                      (relation-asserted invi-handwritten-ans)
                      (response Yes)
                      (valid-answers Yes No))))
-
+                     
+(defrule determine-invi-calligraphic ""
+   (logical (invi-handwritten-ans Yes))
+   =>
+   (assert (UI-state (display invi-calligraphic)
+                     (relation-asserted invi-calligraphic-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))                     
+  
+(defrule determine-invi-fancy ""
+   (logical (invi-handwritten-ans No))
+   =>
+   (assert (UI-state (display invi-fancy)
+                     (relation-asserted invi-fancy-ans)
+                     (response Yes)
+                     (valid-answers Yes No)))) 
+                     
+(defrule determine-invi-hairlines ""
+   (logical (invi-fancy-ans Yes))
+   =>
+   (assert (UI-state (display invi-hairlines)
+                     (relation-asserted invi-hairlines-ans)
+                     (response thin-hairlines)
+                     (valid-answers thin-hairlines thinner-hairlines))))                    
+  
+(defrule determine-invi-readability ""
+   (logical (invi-hairlines-ans thinner-hairlines))
+   =>
+   (assert (UI-state (display invi-readability)
+                     (relation-asserted invi-readability-ans)
+                     (response Yes)
+                     (valid-answers Yes No))))    
+                       
+(defrule determine-invi-fun ""
+   (logical (invi-fancy-ans No))
+   =>
+   (assert (UI-state (display invi-fun)
+                     (relation-asserted invi-fun-ans)
+                     (response Yes)
+                     (valid-answers Yes)))) 
+                          
+(defrule determine-invi-alone ""
+   (logical (invi-fun-ans Yes))
+   =>
+   (assert (UI-state (display invi-alone)
+                     (relation-asserted invi-alone-ans)
+                     (response Yes)
+                     (valid-answers Yes)))) 
+                     
+(defrule determine-invi-okay ""
+   (logical (invi-alone-ans Yes))
+   =>
+   (assert (UI-state (display invi-okay)
+                     (relation-asserted invi-okay-ans)
+                     (response ok)
+                     (valid-answers ok)))) 
+                                       
 ;;;****************
 ;;;* DECISION RULES *
 ;;;****************
 
 (defrule akzidenz-grotesk-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-classic-ans Yes))
    => (assert (UI-state (display akzidenz-grotesk) (state final))))
 
 (defrule arnhem-conclusions ""
@@ -291,29 +451,31 @@
 (defrule baskerville-conclusions ""
    (logical (book-humanistic-ans No))
    => (assert (UI-state (display baskerville) (state final))))
-
-(defrule bodani-conclusions ""
-   (logical (XXX XXX))
-   => (assert (UI-state (display bodani) (state final))))
+   
+(defrule bodoni-conclusions ""
+   (or
+		(logical (logo-restaurant-ans Yes))
+   		(logical (invi-hairlines-ans thin-hairlines)))
+   => (assert (UI-state (display bodoni) (state final))))
 
 (defrule caslon-conclusions ""
    (logical (book-doubt-ans Yes))
    => (assert (UI-state (display caslon) (state final))))
 
 (defrule comic-sans-conclusions ""
-   (logical (XXX XXX))
+   (logical (invi-okay-ans ok))
    => (assert (UI-state (display comic-sans) (state final))))
 
 (defrule didot-conclusions ""
-   (logical (XXX XXX))
+   (logical (invi-readability-ans No))
    => (assert (UI-state (display didot) (state final))))
 
 (defrule eurostile-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-science-fiction-ans good))
    => (assert (UI-state (display eurostile) (state final))))
 
 (defrule fedra-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-something-new-ans good))
    => (assert (UI-state (display fedra) (state final))))
 
 (defrule ff-din-conclusions ""
@@ -321,7 +483,7 @@
    => (assert (UI-state (display ff-din) (state final))))
 
 (defrule ff-enkrighthand-conclusions ""
-   (logical (XXX XXX))
+   (logical (invi-calligraphic-ans No))
    => (assert (UI-state (display ff-enkrighthand) (state final))))
 
 (defrule ff-meta-conclusions ""
@@ -337,11 +499,11 @@
    => (assert (UI-state (display franklin-gothic) (state final))))
 
 (defrule frutiger-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-adobe-ans No))
    => (assert (UI-state (display frutiger) (state final))))
 
 (defrule futura-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-futura-ans Yes))
    => (assert (UI-state (display futura) (state final))))
 
 (defrule garamond-conclusions ""
@@ -355,7 +517,8 @@
 (defrule helvetica-conclusions ""
    (or
       (logical (news-swiss-ans Yes))
-      (logical (news-nineties-ans Yes)))
+      (logical (news-nineties-ans Yes))
+      (logical (logo-science-fiction-ans bad)))
    => (assert (UI-state (display helvetica) (state final))))
 
 (defrule interstate-conclusions ""
@@ -371,11 +534,11 @@
    => (assert (UI-state (display letter-gothic) (state final))))
 
 (defrule lexicon-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-office-ans Yes))
    => (assert (UI-state (display lexicon) (state final))))
 
 (defrule metro-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-futura-ans No))
    => (assert (UI-state (display metro) (state final))))
 
 (defrule miller-conclusions ""
@@ -387,7 +550,7 @@
    => (assert (UI-state (display minion) (state final))))
 
 (defrule myriad-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-adobe-ans Yes))
    => (assert (UI-state (display myriad) (state final))))
 
 (defrule ocr-conclusions ""
@@ -399,11 +562,11 @@
    => (assert (UI-state (display optima) (state final))))
 
 (defrule palatino-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-waiting-ans ok))
    => (assert (UI-state (display palatino) (state final))))
 
 (defrule peignot-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-decorative-ans ok))
    => (assert (UI-state (display peignot) (state final))))
 
 (defrule proforma-conclusions ""
@@ -411,7 +574,7 @@
    => (assert (UI-state (display proforma) (state final))))
 
 (defrule rotis-conclusions ""
-   (logical (XXX XXX))
+   (logical (logo-words-sound-ans good))
    => (assert (UI-state (display rotis) (state final))))
 
 (defrule sabon-conclusions ""
@@ -435,11 +598,11 @@
    => (assert (UI-state (display univers) (state final))))
 
 (defrule walbaum-conclusions ""
-   (logical (XXX XXX))
+   (logical (invi-readability-ans Yes))
    => (assert (UI-state (display walbaum) (state final))))
 
 (defrule zapfino-conclusions ""
-   (logical (XXX XXX))
+   (logical (invi-calligraphic-ans Yes))
    => (assert (UI-state (display zapfino) (state final))))
 
 (defrule no-font ""
